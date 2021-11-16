@@ -23,5 +23,5 @@ public class Node
     public NodeType nodeType = NodeType.standard;
     public Difficulty difficulty = Difficulty.easy;
 
-    public List<Connexion> connexions = new List<Connexion>();
+    //public List<Connexion> connexions = new List<Connexion>();
 }
