@@ -4,11 +4,14 @@ using UnityEngine;
 
 public class DungeonGraph : MonoBehaviour
 {
-    private int nbNodes = 8;
+    [SerializeField] List<GameObject> roomPrefabs = new List<GameObject>();
 
+    int sizeX = 11;
+    int sizeY = 9;
+
+    private int nbNodes = 8;
     Vector2Int currentPos = Vector2Int.zero;
     List<Vector2Int> allPos = new List<Vector2Int>();
-
     Connexion oldConnexion = null;
 
     // Start is called before the first frame update
@@ -26,7 +29,7 @@ public class DungeonGraph : MonoBehaviour
                 allPos.Add(currentPos);
                 node.connexions.Add(connexion);
                 connexion.nodes[0] = node;
-
+                InstanciateRoom(currentPos);
                 NextPosition();
                 oldConnexion = connexion;
             }
@@ -35,6 +38,7 @@ public class DungeonGraph : MonoBehaviour
                 node.position = currentPos;
                 allPos.Add(currentPos);
                 oldConnexion.nodes[1] = node;
+                InstanciateRoom(currentPos);
             }
             else
             {
@@ -45,7 +49,7 @@ public class DungeonGraph : MonoBehaviour
 
                 node.connexions.Add(connexion);
                 connexion.nodes[0] = node;
-
+                InstanciateRoom(currentPos);
                 NextPosition();
                 oldConnexion = connexion;
             }
@@ -81,5 +85,13 @@ public class DungeonGraph : MonoBehaviour
             }
         } while (allPos.Contains(newPos));
         currentPos = newPos;
+    }
+
+    void InstanciateRoom(Vector2Int pos)
+    {
+        int num = Random.Range(0, roomPrefabs.Count);
+        GameObject go = Instantiate(roomPrefabs[num], new Vector3(pos.x * sizeX, pos.y * sizeY, 0), Quaternion.identity);
+        Room room = go.GetComponent<Room>();
+        room.isStartRoom = (pos == Vector2Int.zero);
     }
 }
