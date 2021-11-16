@@ -62,21 +62,20 @@ public class DungeonGraph : MonoBehaviour
         Vector2Int newPos = currentPos;
         do
         {
-            int nextIDOrientation = Random.Range(1, 5);
-            Utils.ORIENTATION orientation = (Utils.ORIENTATION)nextIDOrientation;
+            int nextIDOrientation = Random.Range(0, 4);
             newPos = currentPos;
-            switch (orientation)
+            switch (nextIDOrientation)
             {
-                case Utils.ORIENTATION.EAST:
+                case 0:
                     newPos.x++;
                     break;
-                case Utils.ORIENTATION.WEST:
+                case 1:
                     newPos.x--;
                     break;
-                case Utils.ORIENTATION.NORTH:
+                case 2:
                     newPos.y++;
                     break;
-                case Utils.ORIENTATION.SOUTH:
+                case 3:
                     newPos.y--;
                     break;
             }
