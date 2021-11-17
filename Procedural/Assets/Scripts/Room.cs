@@ -5,6 +5,7 @@ using UnityEngine;
 
 public enum DoorType
 {
+    NONE,
 	NORTH,
 	SOUTH,
 	WEST,
@@ -92,117 +93,122 @@ public class Room : MonoBehaviour {
 		return (GetWorldRoomBounds().Contains(position));
 	}
 
-	public void SetDoor(DoorType door)
+	//public void SetDoor(DoorType door)
+ //   {
+ //       switch (door)
+ //       {
+ //           case DoorType.NORTH:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.WALL);
+ //               EastDoor.SetState(Door.STATE.WALL);
+ //               WestDoor.SetState(Door.STATE.WALL);
+ //               break;
+
+ //           case DoorType.SOUTH:
+ //               NorthDoor.SetState(Door.STATE.WALL);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.WALL);
+ //               WestDoor.SetState(Door.STATE.WALL);
+ //               break;
+
+ //           case DoorType.WEST:
+ //               NorthDoor.SetState(Door.STATE.WALL);
+ //               SouthDoor.SetState(Door.STATE.WALL);
+ //               EastDoor.SetState(Door.STATE.WALL);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           case DoorType.EAST:
+ //               NorthDoor.SetState(Door.STATE.WALL);
+ //               SouthDoor.SetState(Door.STATE.WALL);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.WALL);
+ //               break;
+            
+ //           case DoorType.NORTH_SOUTH:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.WALL);
+ //               WestDoor.SetState(Door.STATE.WALL);
+ //               break;
+            
+ //           case DoorType.WEST_EAST:
+ //               NorthDoor.SetState(Door.STATE.WALL);
+ //               SouthDoor.SetState(Door.STATE.WALL);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           case DoorType.NORTH_WEST:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.WALL);
+ //               EastDoor.SetState(Door.STATE.WALL);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           case DoorType.NORTH_EAST:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.WALL);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.WALL);
+ //               break;
+            
+ //           case DoorType.SOUTH_WEST:
+ //               NorthDoor.SetState(Door.STATE.WALL);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.WALL);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           case DoorType.SOUTH_EAST:
+ //               NorthDoor.SetState(Door.STATE.WALL);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.WALL);
+ //               break;
+            
+ //           case DoorType.NORTH_WEST_EAST:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.WALL);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           case DoorType.NORTH_WEST_SOUTH:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.WALL);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           case DoorType.NORTH_EAST_SOUTH:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.WALL);
+ //               break;
+            
+ //           case DoorType.SOUTH_WEST_EAST:
+ //               NorthDoor.SetState(Door.STATE.WALL);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           case DoorType.FULL:
+ //               NorthDoor.SetState(Door.STATE.OPEN);
+ //               SouthDoor.SetState(Door.STATE.OPEN);
+ //               EastDoor.SetState(Door.STATE.OPEN);
+ //               WestDoor.SetState(Door.STATE.OPEN);
+ //               break;
+            
+ //           default:
+ //               break;
+ //       }
+ //   }
+
+    public void SetDoor(Door door, DOORSTATE doorstate)
     {
-        switch (door)
-        {
-            case DoorType.NORTH:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.WALL);
-                EastDoor.SetState(Door.STATE.WALL);
-                WestDoor.SetState(Door.STATE.WALL);
-                break;
-
-            case DoorType.SOUTH:
-                NorthDoor.SetState(Door.STATE.WALL);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.WALL);
-                WestDoor.SetState(Door.STATE.WALL);
-                break;
-
-            case DoorType.WEST:
-                NorthDoor.SetState(Door.STATE.WALL);
-                SouthDoor.SetState(Door.STATE.WALL);
-                EastDoor.SetState(Door.STATE.WALL);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            case DoorType.EAST:
-                NorthDoor.SetState(Door.STATE.WALL);
-                SouthDoor.SetState(Door.STATE.WALL);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.WALL);
-                break;
-            
-            case DoorType.NORTH_SOUTH:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.WALL);
-                WestDoor.SetState(Door.STATE.WALL);
-                break;
-            
-            case DoorType.WEST_EAST:
-                NorthDoor.SetState(Door.STATE.WALL);
-                SouthDoor.SetState(Door.STATE.WALL);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            case DoorType.NORTH_WEST:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.WALL);
-                EastDoor.SetState(Door.STATE.WALL);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            case DoorType.NORTH_EAST:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.WALL);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.WALL);
-                break;
-            
-            case DoorType.SOUTH_WEST:
-                NorthDoor.SetState(Door.STATE.WALL);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.WALL);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            case DoorType.SOUTH_EAST:
-                NorthDoor.SetState(Door.STATE.WALL);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.WALL);
-                break;
-            
-            case DoorType.NORTH_WEST_EAST:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.WALL);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            case DoorType.NORTH_WEST_SOUTH:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.WALL);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            case DoorType.NORTH_EAST_SOUTH:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.WALL);
-                break;
-            
-            case DoorType.SOUTH_WEST_EAST:
-                NorthDoor.SetState(Door.STATE.WALL);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            case DoorType.FULL:
-                NorthDoor.SetState(Door.STATE.OPEN);
-                SouthDoor.SetState(Door.STATE.OPEN);
-                EastDoor.SetState(Door.STATE.OPEN);
-                WestDoor.SetState(Door.STATE.OPEN);
-                break;
-            
-            default:
-                break;
-        }
+        door.SetState(doorstate);
     }
 }

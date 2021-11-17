@@ -3,6 +3,14 @@ using System.Collections.Generic;
 using UnityEngine;
 using System.Linq;
 
+enum NodeRelativePos
+{
+    left,
+    right,
+    up,
+    down
+}
+
 public class DungeonGraph : MonoBehaviour
 {
     [SerializeField] List<GameObject> roomPrefabs = new List<GameObject>();
@@ -38,6 +46,7 @@ public class DungeonGraph : MonoBehaviour
                 if (!allPos.ContainsKey(pos))
                 {
                     node.position = pos;
+                    node.nodeType = Node.NodeType.start;
                     allPos.Add(pos, node);
                     connexion.nodes[0] = node;
                     allConnexions.Add(connexion);
@@ -126,46 +135,117 @@ public class DungeonGraph : MonoBehaviour
             //1st principal path
             nbNodes = Random.Range(4, 10);
             allNodes.Add(CreatePath(nbNodes, Vector2Int.zero));
+            
 
             //1st secondary path
             int randNode = Random.Range(0, nbNodes);
             nbNodes = Random.Range(2, 6);
             allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position));
+            int nbCo = allConnexions.Count;
 
             //2nd principal path
             nbNodes = Random.Range(4, 10);
             allNodes.Add(CreatePath(nbNodes, allNodes[0].Last().position));
+            allConnexions[nbCo].hasLock = true;
 
             //2nd secondary path
             randNode = Random.Range(0, nbNodes);
             nbNodes = Random.Range(2, 6);
             allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position));
+            nbCo = allConnexions.Count;
 
             //3rd principal path
             nbNodes = Random.Range(4, 10);
             allNodes.Add(CreatePath(nbNodes, allNodes[2].Last().position));
+            allConnexions[nbCo].hasLock = true;
+
+            //foreach (var bla in allPos)
+            //{
+            //    GameObject r = Instantiate(test);
+            //    r.transform.position = new Vector3(bla.Key.x, bla.Key.y, 0);
+            //}
+            //foreach (var bla in allConnexions)
+            //{
+            //    GameObject r = Instantiate(test2);
+            //    Vector2 pos = Vector2.Lerp(bla.nodes[0].position, bla.nodes[1].position, 0.5f);
+            //    r.transform.position = new Vector3(pos.x, pos.y, 0);
+
+            //    if (bla.nodes[0].position.x == bla.nodes[1].position.x)
+            //    {
+            //        r.transform.Rotate(Vector3.forward, 90f);
+            //    }
+            //}
+
+            foreach (var bla in allConnexions)
+            {
+                NodeRelativePos relativePos = GetRelativePos(bla.nodes[0], bla.nodes[1]);
+                DOORSTATE state = bla.hasLock ? DOORSTATE.CLOSED : DOORSTATE.OPEN;
+                switch (relativePos)
+                {
+                    case NodeRelativePos.left:
+                        bla.nodes[0].doorRightOpen = state;
+                        bla.nodes[1].doorLeftOpen = state;
+                        break;
+                    case NodeRelativePos.right:
+                        bla.nodes[0].doorLeftOpen = state;
+                        bla.nodes[1].doorRightOpen = state;
+                        break;
+                    case NodeRelativePos.up:
+                        bla.nodes[0].doorDownOpen = state;
+                        bla.nodes[1].doorUpOpen = state;
+                        break;
+                    case NodeRelativePos.down:
+                        bla.nodes[0].doorUpOpen = state;
+                        bla.nodes[1].doorDownOpen = state;
+                        break;
+                }
+            }
 
             foreach (var bla in allPos)
             {
-                GameObject r = Instantiate(test);
-                r.transform.position = new Vector3(bla.Key.x, bla.Key.y, 0);
-            }
-            foreach (var bla in allConnexions)
-            {
-                GameObject r = Instantiate(test2);
-                Vector2 pos = Vector2.Lerp(bla.nodes[0].position, bla.nodes[1].position, 0.5f);
-                r.transform.position = new Vector3(pos.x, pos.y, 0);
-
-                if (bla.nodes[0].position.x == bla.nodes[1].position.x)
-                {
-                    r.transform.Rotate(Vector3.forward, 90f);
-                }
+                GameObject go = Instantiate(roomPrefabs[0]);
+                go.transform.position = new Vector3(bla.Key.x * sizeX, bla.Key.y * sizeY, 0);
+                Room room = go.GetComponent<Room>();
+                room.SetDoor(room.NorthDoor, bla.Value.doorUpOpen);
+                room.SetDoor(room.SouthDoor, bla.Value.doorDownOpen);
+                room.SetDoor(room.WestDoor, bla.Value.doorLeftOpen);
+                room.SetDoor(room.EastDoor, bla.Value.doorRightOpen);
+                room.isStartRoom = (bla.Value.nodeType == Node.NodeType.start);
             }
         }
         catch
         {
             Restart();
         }
+    }
+
+    NodeRelativePos GetRelativePos(Node node1, Node node2)
+    {
+        NodeRelativePos relPos = NodeRelativePos.down;
+
+        if (node1.position.x == node2.position.x)
+        {
+            if (node1.position.y > node2.position.y)
+            {
+                relPos = NodeRelativePos.up;
+            }
+            else
+            {
+                relPos = NodeRelativePos.down;
+            }
+        }
+        else
+        {
+            if (node1.position.x < node2.position.x)
+            {
+                relPos = NodeRelativePos.left;
+            }
+            else
+            {
+                relPos = NodeRelativePos.right;
+            }
+        }
+        return relPos;
     }
 
     void InstanciateRoom(Vector2Int pos)
