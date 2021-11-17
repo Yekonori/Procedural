@@ -14,11 +14,11 @@ enum NodeRelativePos
 public class DungeonGraph : MonoBehaviour
 {
     [SerializeField] List<GameObject> roomPrefabs = new List<GameObject>();
-    [SerializeField] GameObject test;
-    [SerializeField] GameObject test2;
 
     int sizeX = 11;
     int sizeY = 9;
+    int maxIter = 10;
+    int nbIter = 0;
 
     private int nbNodes = 8;
     Dictionary<Vector2Int, Node> allPos = new Dictionary<Vector2Int, Node>();
@@ -30,6 +30,101 @@ public class DungeonGraph : MonoBehaviour
     void Start()
     {
         Restart();
+    }
+
+    void Restart()
+    {
+        ++nbIter;
+        allNodes.Clear();
+        allPos.Clear();
+        allConnexions.Clear();
+
+        try
+        {
+            //1st principal path
+            nbNodes = Random.Range(4, 10);
+            allNodes.Add(CreatePath(nbNodes, Vector2Int.zero));
+
+            //1st secondary path
+            int randNode = Random.Range(0, nbNodes);
+            nbNodes = Random.Range(2, 6);
+            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position));
+            int nbCo = allConnexions.Count;
+
+            //2nd principal path
+            nbNodes = Random.Range(4, 10);
+            allNodes.Add(CreatePath(nbNodes, allNodes[0].Last().position));
+            allConnexions[nbCo].hasLock = true;
+
+            //2nd secondary path
+            randNode = Random.Range(0, nbNodes);
+            nbNodes = Random.Range(2, 6);
+            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position));
+            nbCo = allConnexions.Count;
+
+            //3rd principal path
+            nbNodes = Random.Range(4, 10);
+            allNodes.Add(CreatePath(nbNodes, allNodes[2].Last().position));
+            allConnexions[nbCo].hasLock = true;
+
+            foreach (var bla in allConnexions)
+            {
+                NodeRelativePos relativePos = GetRelativePos(bla.nodes[0], bla.nodes[1]);
+                DOORSTATE state = bla.hasLock ? DOORSTATE.CLOSED : DOORSTATE.OPEN;
+                switch (relativePos)
+                {
+                    case NodeRelativePos.left:
+                        bla.nodes[0].doorRightOpen = state;
+                        bla.nodes[1].doorLeftOpen = state;
+                        break;
+                    case NodeRelativePos.right:
+                        bla.nodes[0].doorLeftOpen = state;
+                        bla.nodes[1].doorRightOpen = state;
+                        break;
+                    case NodeRelativePos.up:
+                        bla.nodes[0].doorDownOpen = state;
+                        bla.nodes[1].doorUpOpen = state;
+                        break;
+                    case NodeRelativePos.down:
+                        bla.nodes[0].doorUpOpen = state;
+                        bla.nodes[1].doorDownOpen = state;
+                        break;
+                }
+            }
+
+            foreach (var bla in allPos)
+            {
+                List<GameObject> listRooms = GetRooms(bla.Value);
+                if (listRooms.Count == 0)
+                {
+                    string errorMessage = $"No room with difficulty = {bla.Value.difficulty}";
+                    errorMessage += bla.Value.doorDownOpen != DOORSTATE.WALL ? " and down door available" : "";
+                    errorMessage += bla.Value.doorLeftOpen != DOORSTATE.WALL ? " and left door available" : "";
+                    errorMessage += bla.Value.doorRightOpen != DOORSTATE.WALL ? " and right door available" : "";
+                    errorMessage += bla.Value.doorUpOpen != DOORSTATE.WALL ? " and up door available" : "";
+                    
+                    Debug.LogError(errorMessage);
+                    throw new System.Exception();
+                }
+
+                GameObject go = Instantiate(roomPrefabs[0]);
+                go.transform.position = new Vector3(bla.Key.x * sizeX, bla.Key.y * sizeY, 0);
+                Room room = go.GetComponent<Room>();
+                room.SetDoor(room.NorthDoor, bla.Value.doorUpOpen);
+                room.SetDoor(room.SouthDoor, bla.Value.doorDownOpen);
+                room.SetDoor(room.WestDoor, bla.Value.doorLeftOpen);
+                room.SetDoor(room.EastDoor, bla.Value.doorRightOpen);
+                room.isStartRoom = (bla.Value.nodeType == Node.NodeType.start);
+            }
+        }
+        catch
+        {
+            if (nbIter < maxIter)
+            {
+                Restart();
+            }
+            else Debug.LogError("Path unable to be created");
+        }
     }
 
     List<Node> CreatePath(int nbNodes, Vector2Int pos)
@@ -124,101 +219,6 @@ public class DungeonGraph : MonoBehaviour
             !allPos.ContainsKey(new Vector2Int(currentPos.x, currentPos.y - 1));
     }
 
-    void Restart()
-    {
-        allNodes.Clear();
-        allPos.Clear();
-        allConnexions.Clear();
-
-        try
-        {
-            //1st principal path
-            nbNodes = Random.Range(4, 10);
-            allNodes.Add(CreatePath(nbNodes, Vector2Int.zero));
-            
-
-            //1st secondary path
-            int randNode = Random.Range(0, nbNodes);
-            nbNodes = Random.Range(2, 6);
-            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position));
-            int nbCo = allConnexions.Count;
-
-            //2nd principal path
-            nbNodes = Random.Range(4, 10);
-            allNodes.Add(CreatePath(nbNodes, allNodes[0].Last().position));
-            allConnexions[nbCo].hasLock = true;
-
-            //2nd secondary path
-            randNode = Random.Range(0, nbNodes);
-            nbNodes = Random.Range(2, 6);
-            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position));
-            nbCo = allConnexions.Count;
-
-            //3rd principal path
-            nbNodes = Random.Range(4, 10);
-            allNodes.Add(CreatePath(nbNodes, allNodes[2].Last().position));
-            allConnexions[nbCo].hasLock = true;
-
-            //foreach (var bla in allPos)
-            //{
-            //    GameObject r = Instantiate(test);
-            //    r.transform.position = new Vector3(bla.Key.x, bla.Key.y, 0);
-            //}
-            //foreach (var bla in allConnexions)
-            //{
-            //    GameObject r = Instantiate(test2);
-            //    Vector2 pos = Vector2.Lerp(bla.nodes[0].position, bla.nodes[1].position, 0.5f);
-            //    r.transform.position = new Vector3(pos.x, pos.y, 0);
-
-            //    if (bla.nodes[0].position.x == bla.nodes[1].position.x)
-            //    {
-            //        r.transform.Rotate(Vector3.forward, 90f);
-            //    }
-            //}
-
-            foreach (var bla in allConnexions)
-            {
-                NodeRelativePos relativePos = GetRelativePos(bla.nodes[0], bla.nodes[1]);
-                DOORSTATE state = bla.hasLock ? DOORSTATE.CLOSED : DOORSTATE.OPEN;
-                switch (relativePos)
-                {
-                    case NodeRelativePos.left:
-                        bla.nodes[0].doorRightOpen = state;
-                        bla.nodes[1].doorLeftOpen = state;
-                        break;
-                    case NodeRelativePos.right:
-                        bla.nodes[0].doorLeftOpen = state;
-                        bla.nodes[1].doorRightOpen = state;
-                        break;
-                    case NodeRelativePos.up:
-                        bla.nodes[0].doorDownOpen = state;
-                        bla.nodes[1].doorUpOpen = state;
-                        break;
-                    case NodeRelativePos.down:
-                        bla.nodes[0].doorUpOpen = state;
-                        bla.nodes[1].doorDownOpen = state;
-                        break;
-                }
-            }
-
-            foreach (var bla in allPos)
-            {
-                GameObject go = Instantiate(roomPrefabs[0]);
-                go.transform.position = new Vector3(bla.Key.x * sizeX, bla.Key.y * sizeY, 0);
-                Room room = go.GetComponent<Room>();
-                room.SetDoor(room.NorthDoor, bla.Value.doorUpOpen);
-                room.SetDoor(room.SouthDoor, bla.Value.doorDownOpen);
-                room.SetDoor(room.WestDoor, bla.Value.doorLeftOpen);
-                room.SetDoor(room.EastDoor, bla.Value.doorRightOpen);
-                room.isStartRoom = (bla.Value.nodeType == Node.NodeType.start);
-            }
-        }
-        catch
-        {
-            Restart();
-        }
-    }
-
     NodeRelativePos GetRelativePos(Node node1, Node node2)
     {
         NodeRelativePos relPos = NodeRelativePos.down;
@@ -248,11 +248,21 @@ public class DungeonGraph : MonoBehaviour
         return relPos;
     }
 
-    void InstanciateRoom(Vector2Int pos)
+    List<GameObject> GetRooms(Node node)
     {
-        int num = Random.Range(0, roomPrefabs.Count);
-        GameObject go = Instantiate(roomPrefabs[num], new Vector3(pos.x * sizeX, pos.y * sizeY, 0), Quaternion.identity);
-        Room room = go.GetComponent<Room>();
-        room.isStartRoom = (pos == Vector2Int.zero);
+        List<GameObject> rooms = new List<GameObject>();
+        foreach(GameObject obj in roomPrefabs)
+        {
+            RoomConfig roomConfig = obj.GetComponent<RoomConfig>();
+            if ((!roomConfig.eastDoorAvailable && node.doorRightOpen != DOORSTATE.WALL) ||
+                (!roomConfig.westDoorAvailable && node.doorLeftOpen != DOORSTATE.WALL) ||
+                (!roomConfig.southDoorAvailable && node.doorDownOpen != DOORSTATE.WALL) ||
+                (!roomConfig.northDoorAvailable && node.doorUpOpen != DOORSTATE.WALL) ||
+                (roomConfig.difficulty != node.difficulty))
+                continue;
+
+            rooms.Add(obj);
+        }
+        return rooms;
     }
 }

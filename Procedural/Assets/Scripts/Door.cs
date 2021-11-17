@@ -12,9 +12,6 @@ public enum DOORSTATE
 }
 
 public class Door : MonoBehaviour {
-
-
-
     public const string PLAYER_NAME = "Player";
 
     Utils.ORIENTATION _orientation = Utils.ORIENTATION.NONE;

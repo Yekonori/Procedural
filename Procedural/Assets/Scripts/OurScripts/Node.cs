@@ -2,6 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
+public enum Difficulty
+{
+    easy,
+    medium,
+    hard
+}
+
 public class Node
 {
     public enum NodeType
@@ -10,13 +17,6 @@ public class Node
         secret,
         start,
         end
-    }
-
-    public enum Difficulty
-    {
-        easy,
-        medium,
-        hard
     }
 
     public DOORSTATE doorLeftOpen = DOORSTATE.WALL;
