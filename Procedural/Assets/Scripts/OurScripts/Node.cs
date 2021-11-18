@@ -16,7 +16,8 @@ public class Node
         standard,
         secret,
         start,
-        end
+        end,
+        teleport
     }
 
     public DOORSTATE doorLeftOpen = DOORSTATE.WALL;

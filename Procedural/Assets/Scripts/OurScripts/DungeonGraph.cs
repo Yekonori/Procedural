@@ -43,31 +43,35 @@ public class DungeonGraph : MonoBehaviour
         {
             //1st principal path
             nbNodes = Random.Range(6, 11);
-            allNodes.Add(CreatePath(nbNodes, Vector2Int.zero, 0));
+            allNodes.Add(CreatePath(nbNodes, Vector2Int.zero, 0, true));
 
             //1st secondary path
             int randNode = Random.Range(0, nbNodes);
             nbNodes = Random.Range(4, 7);
-            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position, 1));
-            int nbCo = allConnexions.Count;
+            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position, 1, false));
 
             //2nd principal path
             nbNodes = Random.Range(6, 11);
-            //allNodes.Add(CreatePath(nbNodes, allNodes[0].Last().position));
-            allNodes.Add(CreatePath(nbNodes, new Vector2Int(50, 50), 2));
-            allConnexions[nbCo].hasLock = true;
+            allNodes.Add(CreatePath(nbNodes, new Vector2Int(50, 50), 2, true));
 
             //2nd secondary path
             randNode = Random.Range(0, nbNodes);
             nbNodes = Random.Range(4, 7);
-            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position, 3));
-            nbCo = allConnexions.Count;
+            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position, 3, false));
 
             //3rd principal path
             nbNodes = Random.Range(6, 11);
-            //allNodes.Add(CreatePath(nbNodes, allNodes[2].Last().position));
-            allNodes.Add(CreatePath(nbNodes, new Vector2Int(100, 100), 4));
-            allConnexions[nbCo].hasLock = true;
+            allNodes.Add(CreatePath(nbNodes, new Vector2Int(100, 100), 4, true));
+
+            //3rd secondary path
+            randNode = Random.Range(0, nbNodes);
+            nbNodes = Random.Range(4, 7);
+            allNodes.Add(CreatePath(nbNodes, allNodes[4][randNode].position, 5, false));
+
+            //3rd secondary path bis
+            randNode = Random.Range(0, allNodes[4].Count);
+            nbNodes = Random.Range(4, 7);
+            allNodes.Add(CreatePath(nbNodes, allNodes[4][randNode].position, 6, false));
 
             foreach (var bla in allConnexions)
             {
@@ -94,8 +98,6 @@ public class DungeonGraph : MonoBehaviour
                 }
             }
 
-            int posID = 0;
-
             foreach (var bla in allPos)
             {
                 List<GameObject> listRooms = GetRooms(bla.Value);
@@ -111,18 +113,8 @@ public class DungeonGraph : MonoBehaviour
                     throw new System.Exception();
                 }
 
-                int rndRoom;
-                GameObject go;
-
-                if (posID == 0)
-                {
-                    rndRoom = Random.Range(0, listRooms.Count);
-                    go = Instantiate(listRooms[rndRoom]);
-                }
-                else
-                {
-                    go = Instantiate(roomPrefabs[0]);
-                }
+                int rndRoom = Random.Range(0, listRooms.Count);
+                GameObject go = Instantiate(listRooms[rndRoom]);
 
                 go.transform.position = new Vector3(bla.Key.x * sizeX, bla.Key.y * sizeY, 0);
                 Room room = go.GetComponent<Room>();
@@ -143,7 +135,7 @@ public class DungeonGraph : MonoBehaviour
         }
     }
 
-    List<Node> CreatePath(int nbNodes, Vector2Int pos, int blockNumber)
+    List<Node> CreatePath(int nbNodes, Vector2Int pos, int blockNumber, bool isPrincipal)
     {
         List<Node> nodes = new List<Node>();
 
@@ -156,7 +148,7 @@ public class DungeonGraph : MonoBehaviour
 
             if (i == 0)
             {
-                if (blockNumber % 2 == 0)
+                if (isPrincipal)
                 {
                     node.position = pos;
 
@@ -179,9 +171,18 @@ public class DungeonGraph : MonoBehaviour
             else if (i == nbNodes - 1)
             {
                 node.position = pos;
+                if (isPrincipal && blockNumber == 4)
+                {
+                    allConnexions.Last().hasLock = true;
+                    node.nodeType = Node.NodeType.end;
+                }
+                else
+                {
+                    node.nodeType = Node.NodeType.teleport;
+                }
                 allPos.Add(pos, node);
-
                 allConnexions.Last().nodes[1] = node;
+
                 nodes.Add(node);
             }
             else
@@ -275,6 +276,8 @@ public class DungeonGraph : MonoBehaviour
         {
             RoomConfig roomConfig = obj.GetComponent<RoomConfig>();
             if ((roomConfig.isStartRoom != (node.nodeType == Node.NodeType.start)) ||
+                (roomConfig.isEndRoom != (node.nodeType == Node.NodeType.end)) ||
+                (roomConfig.HasTeleporter != (node.nodeType == Node.NodeType.teleport)) ||
                 (!roomConfig.eastDoorAvailable && node.doorRightOpen != DOORSTATE.WALL) ||
                 (!roomConfig.westDoorAvailable && node.doorLeftOpen != DOORSTATE.WALL) ||
                 (!roomConfig.southDoorAvailable && node.doorDownOpen != DOORSTATE.WALL) ||

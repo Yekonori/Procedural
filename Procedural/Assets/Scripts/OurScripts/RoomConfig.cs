@@ -27,10 +27,5 @@ public class RoomConfig : MonoBehaviour
 
     [Header("Teleporters")]
 
-    public bool HasTeleporterA = false;
-    public bool HasTeleporterB = false;
-    public bool HasTeleporterC = false;
-    public bool HasTeleporterD = false;
-    public bool HasTeleporterE = false;
-    public bool HasTeleporterF = false;
+    public bool HasTeleporter = false;
 }
