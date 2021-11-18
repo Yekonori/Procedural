@@ -16,7 +16,7 @@ MonoBehaviour:
   TilePxSize: {x: 32, y: 32}
   SliceOffset: {x: 0, y: 0}
   SlicePadding: {x: 0, y: 0}
-  BackgroundColor: {r: 0.5188679, g: 0.5188679, b: 0.5188679, a: 0.8039216}
+  BackgroundColor: {r: 0.75071335, g: 1, b: 0, a: 0.8039216}
   VisualTileSize: {x: 32, y: 32}
   VisualTilePadding: 1
   TileRowLength: 8
@@ -79,8 +79,7 @@ MonoBehaviour:
     paramContainer:
       m_paramList: []
     prefabData:
-      prefab: {fileID: 3508380386316081258, guid: 94bbea04c40d9c144bedd2c8c4df140e,
-        type: 3}
+      prefab: {fileID: 3508380386316081258, guid: 94bbea04c40d9c144bedd2c8c4df140e, type: 3}
       offset: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
       offsetMode: 0
@@ -99,8 +98,7 @@ MonoBehaviour:
     paramContainer:
       m_paramList: []
     prefabData:
-      prefab: {fileID: 6144991255345215292, guid: e220ae9ccd75bd04fa295d970d7c2202,
-        type: 3}
+      prefab: {fileID: 6144991255345215292, guid: e220ae9ccd75bd04fa295d970d7c2202, type: 3}
       offset: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
       offsetMode: 0
@@ -119,8 +117,7 @@ MonoBehaviour:
     paramContainer:
       m_paramList: []
     prefabData:
-      prefab: {fileID: 7249761477647285960, guid: 780d3c292fcda5e498755efe93cf622a,
-        type: 3}
+      prefab: {fileID: 7249761477647285960, guid: 780d3c292fcda5e498755efe93cf622a, type: 3}
       offset: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
       offsetMode: 0
@@ -196,7 +193,7 @@ MonoBehaviour:
     paramContainer:
       m_paramList: []
     prefabData:
-      prefab: {fileID: 0}
+      prefab: {fileID: 7249761477647285960, guid: 30e4211b206ecab439af2adfcc133e21, type: 3}
       offset: {x: 0, y: 0, z: 0}
       rotation: {x: 0, y: 0, z: 0}
       offsetMode: 0
