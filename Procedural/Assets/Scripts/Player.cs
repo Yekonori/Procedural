@@ -325,4 +325,9 @@ public class Player : MonoBehaviour {
             ApplyHit(attack);
         }
     }
+
+    public void TeleportTo(Vector2 teleportPos)
+    {
+        transform.position = teleportPos;
+    }
 }
