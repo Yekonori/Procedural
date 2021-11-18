@@ -4,6 +4,12 @@ using UnityEngine;
 
 public class RoomConfig : MonoBehaviour
 {
+    [Header("Room Position")]
+
+    public bool isStartRoom = false;
+    public bool isEndRoom = false;
+    public bool isSecretRoom = false;
+
     [Header("Door available")]
 
     public bool southDoorAvailable = true;

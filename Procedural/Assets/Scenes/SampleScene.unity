@@ -477,104 +477,6 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4193226117228763186, guid: 780d3c292fcda5e498755efe93cf622a, type: 3}
   m_PrefabInstance: {fileID: 345495210}
   m_PrefabAsset: {fileID: 0}
---- !u!1 &109911067
-GameObject:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  serializedVersion: 6
-  m_Component:
-  - component: {fileID: 109911070}
-  - component: {fileID: 109911069}
-  - component: {fileID: 109911068}
-  m_Layer: 0
-  m_Name: Brush
-  m_TagString: Untagged
-  m_Icon: {fileID: 0}
-  m_NavMeshLayer: 0
-  m_StaticEditorFlags: 0
-  m_IsActive: 1
---- !u!114 &109911068
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 109911067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 860611cc84144924c8a95e2a1670d236, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  Offset: {x: 0, y: 0}
-  IsUndoEnabled: 1
-  m_brushTilemap: {fileID: 0}
---- !u!114 &109911069
-MonoBehaviour:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 109911067}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 4dec3ca0fe88506448df84e8bf55b2dc, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ShowGrid: 1
-  InnerPadding: 0
-  ColliderDepth: 0.1
-  ColliderType: 0
-  Collider2DType: 0
-  ShowColliderNormals: 1
-  ColliderDisplayMode: 0
-  IsUndoEnabled: 0
-  SortOrder: 0
-  m_sortingLayer: 0
-  m_sortingLayerName: Default
-  m_orderInLayer: 0
-  m_material: {fileID: 10754, guid: 0000000000000000f000000000000000, type: 0}
-  m_tintColor: {r: 1, g: 1, b: 1, a: 1}
-  m_pixelSnap: 0
-  m_isVisible: 1
-  m_allowPaintingOutOfBounds: 1
-  m_autoShrink: 0
-  m_enableUndoWhilePainting: 1
-  m_isTrigger: 0
-  m_physicMaterial: {fileID: 0}
-  m_physicMaterial2D: {fileID: 0}
-  m_cellSize: {x: 0, y: 0}
-  m_mapBounds:
-    m_Center: {x: 0, y: 0, z: 0}
-    m_Extent: {x: 0, y: 0, z: 0}
-  m_tileset: {fileID: 0}
-  m_minGridX: 0
-  m_minGridY: 0
-  m_maxGridX: 0
-  m_maxGridY: 0
-  m_parentTilemapGroup: {fileID: 0}
-  m_parallaxFactor: {x: 1, y: 1}
-  m_chunkRendererProperties:
-    castShadows: 0
-    receiveShadows: 0
-    useLightProbes: 0
-    reflectionProbeUsage: 0
-    anchorOverride: {fileID: 0}
---- !u!4 &109911070
-Transform:
-  m_ObjectHideFlags: 1
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 109911067}
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
-  m_Children: []
-  m_Father: {fileID: 0}
-  m_RootOrder: 5
-  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &126524911
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -1563,8 +1465,18 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   roomPrefabs:
   - {fileID: 7083969761125944954, guid: 952ec04f23ecaa84cbbbdec1d2c6efeb, type: 3}
-  test: {fileID: 1429816046763121249, guid: ae78d6b071e57314791a9016dd915512, type: 3}
-  test2: {fileID: 5023990723970637803, guid: 76ab8db00b2749944a060c1aa8607fce, type: 3}
+  - {fileID: 7591746494547438377, guid: fbf11568ba1954cfc90620c055c95337, type: 3}
+  - {fileID: 7591746494547438377, guid: 41d04e169f5ce40d19361086939c7bd5, type: 3}
+  - {fileID: 7591746494547438377, guid: 9d31331a47ee54ba7a6abe59b4287618, type: 3}
+  - {fileID: 7591746494547438377, guid: 55af87e3fd4b0406597994f18191182a, type: 3}
+  - {fileID: 7591746494547438377, guid: e7fc4d2adba61409797f9a31e09bc957, type: 3}
+  - {fileID: 7591746494547438377, guid: e4f64c202e1fd40128d6ff3d2579c318, type: 3}
+  - {fileID: 7591746494547438377, guid: 38f472d4d26b344dda3dc9d0713b645f, type: 3}
+  - {fileID: 7591746494547438377, guid: dbe42cf47e7714960bca43d432e471c2, type: 3}
+  - {fileID: 7591746494547438377, guid: c171297ae0fe6459db45ba6ed63c04f1, type: 3}
+  - {fileID: 7591746494547438377, guid: 518544a5e70f244c0bd72cf3f515042a, type: 3}
+  - {fileID: 7591746494547438377, guid: 25d1bb3107b8f4fed8f585c743ced477, type: 3}
+  - {fileID: 7591746494547438377, guid: 0ae04fd50226c4d8e8113a57d8fd5c6d, type: 3}
 --- !u!4 &301236710
 Transform:
   m_ObjectHideFlags: 0

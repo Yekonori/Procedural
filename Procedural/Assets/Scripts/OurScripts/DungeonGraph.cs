@@ -42,29 +42,31 @@ public class DungeonGraph : MonoBehaviour
         try
         {
             //1st principal path
-            nbNodes = Random.Range(4, 10);
-            allNodes.Add(CreatePath(nbNodes, Vector2Int.zero));
+            nbNodes = Random.Range(6, 11);
+            allNodes.Add(CreatePath(nbNodes, Vector2Int.zero, 0));
 
             //1st secondary path
             int randNode = Random.Range(0, nbNodes);
-            nbNodes = Random.Range(2, 6);
-            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position));
+            nbNodes = Random.Range(4, 7);
+            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position, 1));
             int nbCo = allConnexions.Count;
 
             //2nd principal path
-            nbNodes = Random.Range(4, 10);
-            allNodes.Add(CreatePath(nbNodes, allNodes[0].Last().position));
+            nbNodes = Random.Range(6, 11);
+            //allNodes.Add(CreatePath(nbNodes, allNodes[0].Last().position));
+            allNodes.Add(CreatePath(nbNodes, new Vector2Int(50, 50), 2));
             allConnexions[nbCo].hasLock = true;
 
             //2nd secondary path
             randNode = Random.Range(0, nbNodes);
-            nbNodes = Random.Range(2, 6);
-            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position));
+            nbNodes = Random.Range(4, 7);
+            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position, 3));
             nbCo = allConnexions.Count;
 
             //3rd principal path
-            nbNodes = Random.Range(4, 10);
-            allNodes.Add(CreatePath(nbNodes, allNodes[2].Last().position));
+            nbNodes = Random.Range(6, 11);
+            //allNodes.Add(CreatePath(nbNodes, allNodes[2].Last().position));
+            allNodes.Add(CreatePath(nbNodes, new Vector2Int(100, 100), 4));
             allConnexions[nbCo].hasLock = true;
 
             foreach (var bla in allConnexions)
@@ -92,6 +94,8 @@ public class DungeonGraph : MonoBehaviour
                 }
             }
 
+            int posID = 0;
+
             foreach (var bla in allPos)
             {
                 List<GameObject> listRooms = GetRooms(bla.Value);
@@ -107,7 +111,19 @@ public class DungeonGraph : MonoBehaviour
                     throw new System.Exception();
                 }
 
-                GameObject go = Instantiate(roomPrefabs[0]);
+                int rndRoom;
+                GameObject go;
+
+                if (posID == 0)
+                {
+                    rndRoom = Random.Range(0, listRooms.Count);
+                    go = Instantiate(listRooms[rndRoom]);
+                }
+                else
+                {
+                    go = Instantiate(roomPrefabs[0]);
+                }
+
                 go.transform.position = new Vector3(bla.Key.x * sizeX, bla.Key.y * sizeY, 0);
                 Room room = go.GetComponent<Room>();
                 room.SetDoor(room.NorthDoor, bla.Value.doorUpOpen);
@@ -127,7 +143,7 @@ public class DungeonGraph : MonoBehaviour
         }
     }
 
-    List<Node> CreatePath(int nbNodes, Vector2Int pos)
+    List<Node> CreatePath(int nbNodes, Vector2Int pos, int blockNumber)
     {
         List<Node> nodes = new List<Node>();
 
@@ -136,12 +152,16 @@ public class DungeonGraph : MonoBehaviour
             Node node = new Node();
             Connexion connexion = new Connexion();
 
+            node.nodeType = Node.NodeType.standard;
+
             if (i == 0)
             {
-                if (!allPos.ContainsKey(pos))
+                if (blockNumber % 2 == 0)
                 {
                     node.position = pos;
-                    node.nodeType = Node.NodeType.start;
+
+                    if (blockNumber == 0) node.nodeType = Node.NodeType.start;
+
                     allPos.Add(pos, node);
                     connexion.nodes[0] = node;
                     allConnexions.Add(connexion);
@@ -254,7 +274,8 @@ public class DungeonGraph : MonoBehaviour
         foreach(GameObject obj in roomPrefabs)
         {
             RoomConfig roomConfig = obj.GetComponent<RoomConfig>();
-            if ((!roomConfig.eastDoorAvailable && node.doorRightOpen != DOORSTATE.WALL) ||
+            if ((roomConfig.isStartRoom != (node.nodeType == Node.NodeType.start)) ||
+                (!roomConfig.eastDoorAvailable && node.doorRightOpen != DOORSTATE.WALL) ||
                 (!roomConfig.westDoorAvailable && node.doorLeftOpen != DOORSTATE.WALL) ||
                 (!roomConfig.southDoorAvailable && node.doorDownOpen != DOORSTATE.WALL) ||
                 (!roomConfig.northDoorAvailable && node.doorUpOpen != DOORSTATE.WALL) ||
