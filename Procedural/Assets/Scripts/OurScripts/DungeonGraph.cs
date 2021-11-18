@@ -26,9 +26,14 @@ public class DungeonGraph : MonoBehaviour
     private List<List<Node>> allNodes = new List<List<Node>>();
     private List<Connexion> allConnexions = new List<Connexion>();
 
+    List<Node>[] nodeTP = new List<Node>[3];
+
     // Start is called before the first frame update
     void Start()
     {
+        nodeTP[0] = new List<Node>();
+        nodeTP[1] = new List<Node>();
+        nodeTP[2] = new List<Node>();
         Restart();
     }
 
@@ -38,6 +43,9 @@ public class DungeonGraph : MonoBehaviour
         allNodes.Clear();
         allPos.Clear();
         allConnexions.Clear();
+        nodeTP[0].Clear();
+        nodeTP[1].Clear();
+        nodeTP[2].Clear();
 
         try
         {
@@ -48,30 +56,30 @@ public class DungeonGraph : MonoBehaviour
             //1st secondary path
             int randNode = Random.Range(0, nbNodes);
             nbNodes = Random.Range(4, 7);
-            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position, 1, false));
+            allNodes.Add(CreatePath(nbNodes, allNodes[0][randNode].position, 0, false));
 
             //2nd principal path
             nbNodes = Random.Range(6, 11);
-            allNodes.Add(CreatePath(nbNodes, new Vector2Int(50, 50), 2, true));
+            allNodes.Add(CreatePath(nbNodes, new Vector2Int(20, 0), 1, true));
 
             //2nd secondary path
             randNode = Random.Range(0, nbNodes);
             nbNodes = Random.Range(4, 7);
-            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position, 3, false));
+            allNodes.Add(CreatePath(nbNodes, allNodes[2][randNode].position, 1, false));
 
             //3rd principal path
             nbNodes = Random.Range(6, 11);
-            allNodes.Add(CreatePath(nbNodes, new Vector2Int(100, 100), 4, true));
+            allNodes.Add(CreatePath(nbNodes, new Vector2Int(40, 0), 2, true));
 
             //3rd secondary path
-            randNode = Random.Range(0, nbNodes);
+            randNode = Random.Range(0, nbNodes -1);
             nbNodes = Random.Range(4, 7);
-            allNodes.Add(CreatePath(nbNodes, allNodes[4][randNode].position, 5, false));
+            allNodes.Add(CreatePath(nbNodes, allNodes[4][randNode].position, 2, false));
 
             //3rd secondary path bis
-            randNode = Random.Range(0, allNodes[4].Count);
+            randNode = Random.Range(0, allNodes[4].Count -1);
             nbNodes = Random.Range(4, 7);
-            allNodes.Add(CreatePath(nbNodes, allNodes[4][randNode].position, 6, false));
+            allNodes.Add(CreatePath(nbNodes, allNodes[4][randNode].position, 2, false));
 
             foreach (var bla in allConnexions)
             {
@@ -97,6 +105,9 @@ public class DungeonGraph : MonoBehaviour
                         break;
                 }
             }
+
+            // define which portal is associated with which
+            AssignPortal();
 
             foreach (var bla in allPos)
             {
@@ -125,7 +136,7 @@ public class DungeonGraph : MonoBehaviour
                 room.isStartRoom = (bla.Value.nodeType == Node.NodeType.start);
             }
         }
-        catch
+        catch (System.Exception e)
         {
             if (nbIter < maxIter)
             {
@@ -142,6 +153,7 @@ public class DungeonGraph : MonoBehaviour
         for (int i = 0; i < nbNodes; ++i)
         {
             Node node = new Node();
+            node.blockNumber = blockNumber;
             Connexion connexion = new Connexion();
 
             node.nodeType = Node.NodeType.standard;
@@ -171,7 +183,7 @@ public class DungeonGraph : MonoBehaviour
             else if (i == nbNodes - 1)
             {
                 node.position = pos;
-                if (isPrincipal && blockNumber == 4)
+                if (isPrincipal && blockNumber == 2)
                 {
                     allConnexions.Last().hasLock = true;
                     node.nodeType = Node.NodeType.end;
@@ -179,6 +191,7 @@ public class DungeonGraph : MonoBehaviour
                 else
                 {
                     node.nodeType = Node.NodeType.teleport;
+                    nodeTP[blockNumber].Add(node);
                 }
                 allPos.Add(pos, node);
                 allConnexions.Last().nodes[1] = node;
@@ -288,5 +301,124 @@ public class DungeonGraph : MonoBehaviour
             rooms.Add(obj);
         }
         return rooms;
+    }
+
+    void AssignPortal()
+    {
+        Dictionary<int, portalObj> portals = new Dictionary<int, portalObj>()
+        {
+            {1, new portalObj {} },
+            {2, new portalObj {} },
+            {3, new portalObj {} },
+            {4, new portalObj {} }
+        };
+
+        // Assignation des numeros aux Nodes teleport existants
+        int nbBlock = -1;
+        foreach (List<Node> listN in nodeTP)
+        {
+            ++nbBlock;
+
+            int tpNb = Random.Range(1, 5);
+            while (portals[tpNb].count == 2)
+            {
+                tpNb = Random.Range(1, 5);
+            }
+            listN[0].tpNumber = tpNb;
+            ++portals[tpNb].count;
+            portals[tpNb].blocks.Add(nbBlock);
+
+            int[] availablePortNumber = GetAvailablePortNumber(tpNb);
+            int random = Random.Range(0, 2);
+            tpNb = availablePortNumber[random];
+            if (portals[tpNb].count == 2)
+            {
+                tpNb = availablePortNumber[1 - random];
+            }
+            listN[1].tpNumber = tpNb;
+            ++portals[tpNb].count;
+            portals[tpNb].blocks.Add(nbBlock);
+        }
+
+        // recup num tp pas utilisés 2 fois avec le block ou il existe deja
+        Dictionary<int, portalObj> tpNotUsed = new Dictionary<int, portalObj>();
+        foreach (var kvp in portals)
+        {
+            if (kvp.Value.count < 2)
+            {
+                tpNotUsed.Add(kvp.Key, kvp.Value);
+            }
+        }
+
+        // modif 2 Nodes into portals;
+        foreach (var kvp in tpNotUsed)
+        {
+            //choix du block
+            int random = Random.Range(0, 2);
+            int[] blocks = new int[2];
+            if (kvp.Value.blocks[0] == 0)
+            {
+                blocks[0] = 1;
+                blocks[1] = 2;
+            }
+            else if (kvp.Value.blocks[0] == 1)
+            {
+                blocks[0] = 0;
+                blocks[1] = 2;
+            }
+            else
+            {
+                blocks[0] = 0;
+                blocks[1] = 1;
+            }
+            int block = blocks[random];
+
+            //list des nodes possibles à modifier en tp
+            List<Node> nodesToModify = allPos.Values.Where((node) => node.nodeType == Node.NodeType.standard && node.blockNumber == block).ToList();
+
+            // modifier 1 aléatoire
+            random = Random.Range(0, nodesToModify.Count);
+            nodesToModify[random].nodeType = Node.NodeType.teleport;
+            nodesToModify[random].tpNumber = kvp.Key;
+        }
+
+        List<Node> tpNodes = allPos.Values.Where((node) => node.nodeType == Node.NodeType.teleport).ToList();
+
+        foreach (Node node in tpNodes)
+        {
+            node.associatedNode = tpNodes.First((n) => n.tpNumber == node.tpNumber && n != node);
+        }
+    }
+
+    int[] GetAvailablePortNumber(int previousPortNb)
+    {
+        int[] availablePortNb = new int[2];
+        if (previousPortNb == 1)
+        {
+            availablePortNb[0] = 4;
+            availablePortNb[1] = 2;
+        }
+        else if (previousPortNb == 2)
+        {
+            availablePortNb[0] = 1;
+            availablePortNb[1] = 3;
+        }
+        else if (previousPortNb == 3)
+        {
+            availablePortNb[0] = 2;
+            availablePortNb[1] = 4;
+        }
+        else
+        {
+            availablePortNb[0] = 3;
+            availablePortNb[1] = 1;
+        }
+        return availablePortNb;
+    }
+
+    class portalObj
+    {
+        public int count = 0;
+        public List<int> blocks = new List<int>();
     }
 }

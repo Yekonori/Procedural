@@ -28,4 +28,8 @@ public class Node
     public Vector2Int position = Vector2Int.zero;
     public NodeType nodeType = NodeType.standard;
     public Difficulty difficulty = Difficulty.easy;
+
+    public int blockNumber = 0;
+    public Node associatedNode = null;
+    public int tpNumber = 0;
 }
