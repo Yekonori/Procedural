@@ -233,6 +233,7 @@ GameObject:
   - component: {fileID: 7591746494547438375}
   - component: {fileID: 7591746494547438373}
   - component: {fileID: 7591746494547438372}
+  - component: {fileID: 5676761290826633504}
   m_Layer: 0
   m_Name: Room4
   m_TagString: Untagged
@@ -293,6 +294,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   isStartRoom: 0
   position: {x: 0, y: 1}
+  NorthDoor: {fileID: 0}
+  SouthDoor: {fileID: 0}
+  WestDoor: {fileID: 0}
+  EastDoor: {fileID: 0}
 --- !u!50 &7591746494547438372
 Rigidbody2D:
   serializedVersion: 4
@@ -314,6 +319,30 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 0
   m_Constraints: 0
+--- !u!114 &5676761290826633504
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7591746494547438377}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f1fa8fb1f7189174197cb73aab637a4e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  southDoorAvailable: 1
+  northDoorAvailable: 1
+  westDoorAvailable: 1
+  eastDoorAvailable: 1
+  difficulty: 0
+  HasKey: 0
+  HasTeleporterA: 0
+  HasTeleporterB: 0
+  HasTeleporterC: 0
+  HasTeleporterD: 0
+  HasTeleporterE: 0
+  HasTeleporterF: 0
 --- !u!1 &7591746495010807934
 GameObject:
   m_ObjectHideFlags: 0
@@ -746,14 +775,14 @@ PrefabInstance:
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 9da7b780c096a1f42b3578150579f43f, type: 3}
---- !u!1 &3133791729003533587 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 4766563019477658476, guid: 9da7b780c096a1f42b3578150579f43f, type: 3}
-  m_PrefabInstance: {fileID: 7591746493336960639}
-  m_PrefabAsset: {fileID: 0}
 --- !u!4 &3133791729003533599 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 4766563019477658464, guid: 9da7b780c096a1f42b3578150579f43f, type: 3}
+  m_PrefabInstance: {fileID: 7591746493336960639}
+  m_PrefabAsset: {fileID: 0}
+--- !u!1 &3133791729003533587 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 4766563019477658476, guid: 9da7b780c096a1f42b3578150579f43f, type: 3}
   m_PrefabInstance: {fileID: 7591746493336960639}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &7591746494365144966
