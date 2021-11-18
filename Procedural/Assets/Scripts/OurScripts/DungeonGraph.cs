@@ -107,8 +107,10 @@ public class DungeonGraph : MonoBehaviour
             }
 
             // define which portal is associated with which
-            AssignPortal();
+            AssignNodePortal();
 
+            Dictionary<Node, Teleport> teleportOfNode = new Dictionary<Node, Teleport>();
+            Dictionary<Teleport, Node> associatedNodeOfTeleport = new Dictionary<Teleport, Node>();
             foreach (var bla in allPos)
             {
                 List<GameObject> listRooms = GetRooms(bla.Value);
@@ -134,7 +136,16 @@ public class DungeonGraph : MonoBehaviour
                 room.SetDoor(room.WestDoor, bla.Value.doorLeftOpen);
                 room.SetDoor(room.EastDoor, bla.Value.doorRightOpen);
                 room.isStartRoom = (bla.Value.nodeType == Node.NodeType.start);
+
+                if (bla.Value.nodeType == Node.NodeType.teleport)
+                {
+                    Teleport port = room.GetComponentInChildren<Teleport>();
+                    teleportOfNode.Add(bla.Value, port);
+                    associatedNodeOfTeleport.Add(port, bla.Value.associatedNode);
+                }
             }
+
+            AssignRoomPortal(teleportOfNode, associatedNodeOfTeleport);
         }
         catch (System.Exception e)
         {
@@ -303,7 +314,7 @@ public class DungeonGraph : MonoBehaviour
         return rooms;
     }
 
-    void AssignPortal()
+    void AssignNodePortal()
     {
         Dictionary<int, portalObj> portals = new Dictionary<int, portalObj>()
         {
@@ -420,5 +431,13 @@ public class DungeonGraph : MonoBehaviour
     {
         public int count = 0;
         public List<int> blocks = new List<int>();
+    }
+    
+    void AssignRoomPortal(Dictionary<Node, Teleport> teleportOfNode, Dictionary<Teleport, Node> associatedNodeOfTeleport)
+    {
+        foreach (var kvp in associatedNodeOfTeleport)
+        {
+            kvp.Key.binome = teleportOfNode[kvp.Value];
+        }
     }
 }

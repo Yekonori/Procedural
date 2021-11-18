@@ -326,8 +326,9 @@ public class Player : MonoBehaviour {
         }
     }
 
-    public void TeleportTo(Vector2 teleportPos)
+    public void TeleportTo(Vector2 teleportPos, Room room)
     {
         transform.position = teleportPos;
+        room.OnEnterRoom();
     }
 }
