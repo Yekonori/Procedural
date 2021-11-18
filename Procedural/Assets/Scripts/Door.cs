@@ -3,22 +3,22 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Tilemaps;
 
+public enum DOORSTATE
+{
+    WALL = 0,
+    OPEN = 1,
+    CLOSED = 2,
+    SECRET = 3,
+}
+
 public class Door : MonoBehaviour {
-
-    public enum STATE {
-        OPEN = 0,
-        CLOSED = 1,
-        WALL = 2,
-        SECRET = 3,
-    }
-
     public const string PLAYER_NAME = "Player";
 
     Utils.ORIENTATION _orientation = Utils.ORIENTATION.NONE;
 	public Utils.ORIENTATION Orientation { get { return _orientation; } }
 
-	STATE _state = STATE.OPEN;
-	public STATE State { get { return _state; } }
+	DOORSTATE _state = DOORSTATE.OPEN;
+	public DOORSTATE State { get { return _state; } }
 	public GameObject closedGo = null;
     public GameObject openGo = null;
     public GameObject wallGo = null;
@@ -45,16 +45,16 @@ public class Door : MonoBehaviour {
         transform.rotation = Quaternion.Euler(0, 0, -Utils.OrientationToAngle(_orientation));
 		if(closedGo.gameObject.activeSelf)
 		{
-			SetState(STATE.CLOSED);
+			SetState(DOORSTATE.CLOSED);
 		} else if (openGo.gameObject.activeSelf)
 		{
-			SetState(STATE.OPEN);
+			SetState(DOORSTATE.OPEN);
 		} else if (wallGo.gameObject.activeSelf)
 		{
-			SetState(STATE.WALL);
+			SetState(DOORSTATE.WALL);
 		} else if (secretGo.gameObject.activeSelf)
 		{
-			SetState(STATE.SECRET);
+			SetState(DOORSTATE.SECRET);
 		}
 	}
 
@@ -64,20 +64,20 @@ public class Door : MonoBehaviour {
             return;
 
         switch (_state) {
-            case STATE.CLOSED:
+            case DOORSTATE.CLOSED:
                 if (Player.Instance.KeyCount > 0)
                 {
                     Player.Instance.KeyCount--;
-                    SetState(STATE.OPEN);
+                    SetState(DOORSTATE.OPEN);
 					Room nextRoom = GetNextRoom();
 					if(nextRoom)
 					{
 						Door[] doors = nextRoom.GetComponentsInChildren<Door>(true);
 						foreach(Door door in doors)
 						{
-							if (_orientation == Utils.OppositeOrientation(door.Orientation) && door._state == STATE.CLOSED)
+							if (_orientation == Utils.OppositeOrientation(door.Orientation) && door._state == DOORSTATE.CLOSED)
 							{
-								door.SetState(STATE.OPEN);
+								door.SetState(DOORSTATE.OPEN);
 							}
 						}
 					}
@@ -93,7 +93,7 @@ public class Door : MonoBehaviour {
 		return nextRoom;
 	} 
 
-    public void SetState(STATE state)
+    public void SetState(DOORSTATE state)
     {
         if (closedGo) { closedGo.SetActive(false); }
         if (openGo) { openGo.SetActive(false); }
@@ -102,16 +102,16 @@ public class Door : MonoBehaviour {
         _state = state;
         switch(_state)
         {
-            case STATE.CLOSED:
+            case DOORSTATE.CLOSED:
                 if (closedGo) { closedGo.SetActive(true); }
                 break;
-            case STATE.OPEN:
+            case DOORSTATE.OPEN:
                 if (openGo) { openGo.SetActive(true); }
                 break;
-            case STATE.WALL:
+            case DOORSTATE.WALL:
                 if (wallGo) { wallGo.SetActive(true); }
                 break;
-            case STATE.SECRET:
+            case DOORSTATE.SECRET:
                 if (secretGo) { secretGo.SetActive(true); }
                 break;
         }
