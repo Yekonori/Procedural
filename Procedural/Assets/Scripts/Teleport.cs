@@ -7,6 +7,8 @@ public class Teleport : MonoBehaviour
 	public Teleport binome;
 	public bool canEnter = true;
 
+	public int teleportIndex = 0;
+
 	private void OnTriggerEnter2D(Collider2D collision)
 	{
 		if (Player.Instance == null)
@@ -23,8 +25,16 @@ public class Teleport : MonoBehaviour
 
 		binome.canEnter = false;
 
-		Debug.Log("Player enter in teleporter");
-		Player.Instance.TeleportTo(binome.transform.position, binome.transform.parent.parent.GetComponent<Room>());
+		Debug.Log("Player enter in teleporter n°" + teleportIndex);
+
+		if(TeleportManager.Get.UpdateQueue(teleportIndex))
+        {
+			//Teleport to RoomSecret
+        }
+		else
+        {
+			Player.Instance.TeleportTo(binome.transform.position, binome.transform.parent.parent.GetComponent<Room>());
+		}
     }
 
     private void OnTriggerExit2D(Collider2D collision)
@@ -35,5 +45,11 @@ public class Teleport : MonoBehaviour
 			return;
 
 		if (!canEnter) canEnter = true;
+	}
+
+	public void SetValues(Teleport teleport, int index)
+    {
+		binome = teleport;
+		teleportIndex = index;
 	}
 }

@@ -437,7 +437,7 @@ public class DungeonGraph : MonoBehaviour
     {
         foreach (var kvp in associatedNodeOfTeleport)
         {
-            kvp.Key.binome = teleportOfNode[kvp.Value];
+            kvp.Key.SetValues(teleportOfNode[kvp.Value], kvp.Value.tpNumber);
         }
     }
 }
