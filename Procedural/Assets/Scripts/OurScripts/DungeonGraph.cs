@@ -160,7 +160,7 @@ public class DungeonGraph : MonoBehaviour
                 else if (bla.Value.nodeType == Node.NodeType.end)
                 {
                     endTeleport = room.GetComponentInChildren<Teleport>();
-                    endTeleport.enabled = false;
+                    endTeleport.canEnter = false;
                     TeleportManager.Get.endRoom = endTeleport;
                 }
                 else if (bla.Value.nodeType == Node.NodeType.secret)

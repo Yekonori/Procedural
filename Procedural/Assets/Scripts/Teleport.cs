@@ -59,5 +59,22 @@ public class Teleport : MonoBehaviour
     {
 		binome = teleport;
 		teleportIndex = index;
+
+		if (teleportIndex == 1)
+        {
+			GetComponent<SpriteRenderer>().color = Color.blue;
+        }
+		else if (teleportIndex == 2)
+		{
+			GetComponent<SpriteRenderer>().color = Color.red;
+		}
+		else if (teleportIndex == 3)
+		{
+			GetComponent<SpriteRenderer>().color = Color.green;
+		}
+		else if (teleportIndex == 4)
+		{
+			GetComponent<SpriteRenderer>().color = Color.grey;
+		}
 	}
 }
