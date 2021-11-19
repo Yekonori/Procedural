@@ -27,9 +27,17 @@ public class Teleport : MonoBehaviour
 
 		Debug.Log("Player enter in teleporter n°" + teleportIndex);
 
+		if (TeleportManager.Get.isInSecretRoom)
+        {
+			Teleport end = TeleportManager.Get.endRoom;
+			TeleportManager.Get.isInSecretRoom = false;
+			Player.Instance.TeleportTo(end.transform.position, end.transform.parent.parent.GetComponent<Room>());
+		}
 		if(TeleportManager.Get.UpdateQueue(teleportIndex))
         {
-			//Teleport to RoomSecret
+			Teleport secret = TeleportManager.Get.secretRoom;
+			TeleportManager.Get.isInSecretRoom = true;
+			Player.Instance.TeleportTo(secret.transform.position, secret.transform.parent.parent.GetComponent<Room>());
         }
 		else
         {

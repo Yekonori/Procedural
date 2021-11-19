@@ -15,6 +15,11 @@ public class TeleportManager : MonoBehaviour
 
     private Queue<int> currentPath = new Queue<int>();
 
+    public Teleport secretRoom;
+    public Teleport endRoom;
+
+    public bool isInSecretRoom = false;
+
     public static TeleportManager Get;
 
     private void Awake()

@@ -109,8 +109,22 @@ public class DungeonGraph : MonoBehaviour
             // define which portal is associated with which
             AssignNodePortal();
 
+            //Key creation
+            KeyCreation();
+
+            //Secret room
+            Node secreNode = new Node();
+            secreNode.nodeType = Node.NodeType.secret;
+            Vector2Int secretPos = new Vector2Int(60, 0);
+            secreNode.position = secretPos;
+            //secreNode.associatedNode = allNodes[4].Last();
+            allPos.Add(secretPos, secreNode);
+
             Dictionary<Node, Teleport> teleportOfNode = new Dictionary<Node, Teleport>();
             Dictionary<Teleport, Node> associatedNodeOfTeleport = new Dictionary<Teleport, Node>();
+
+            Teleport endTeleport = null;
+
             foreach (var bla in allPos)
             {
                 List<GameObject> listRooms = GetRooms(bla.Value);
@@ -142,6 +156,17 @@ public class DungeonGraph : MonoBehaviour
                     Teleport port = room.GetComponentInChildren<Teleport>();
                     teleportOfNode.Add(bla.Value, port);
                     associatedNodeOfTeleport.Add(port, bla.Value.associatedNode);
+                }
+                else if (bla.Value.nodeType == Node.NodeType.end)
+                {
+                    endTeleport = room.GetComponentInChildren<Teleport>();
+                    endTeleport.enabled = false;
+                    TeleportManager.Get.endRoom = endTeleport;
+                }
+                else if (bla.Value.nodeType == Node.NodeType.secret)
+                {
+                    Teleport port = room.GetComponentInChildren<Teleport>();
+                    TeleportManager.Get.secretRoom = port;
                 }
             }
 
@@ -302,6 +327,8 @@ public class DungeonGraph : MonoBehaviour
             if ((roomConfig.isStartRoom != (node.nodeType == Node.NodeType.start)) ||
                 (roomConfig.isEndRoom != (node.nodeType == Node.NodeType.end)) ||
                 (roomConfig.HasTeleporter != (node.nodeType == Node.NodeType.teleport)) ||
+                (roomConfig.HasKey != node.hasKey) ||
+                (roomConfig.isSecretRoom != (node.nodeType == Node.NodeType.secret)) ||
                 (!roomConfig.eastDoorAvailable && node.doorRightOpen != DOORSTATE.WALL) ||
                 (!roomConfig.westDoorAvailable && node.doorLeftOpen != DOORSTATE.WALL) ||
                 (!roomConfig.southDoorAvailable && node.doorDownOpen != DOORSTATE.WALL) ||
@@ -439,5 +466,12 @@ public class DungeonGraph : MonoBehaviour
         {
             kvp.Key.SetValues(teleportOfNode[kvp.Value], kvp.Value.tpNumber);
         }
+    }
+
+    void KeyCreation()
+    {
+        List<Node> nodes = allPos.Values.Where((node) => node.nodeType == Node.NodeType.standard).ToList();
+        int rand = Random.Range(0, nodes.Count);
+        nodes[rand].hasKey = true;
     }
 }

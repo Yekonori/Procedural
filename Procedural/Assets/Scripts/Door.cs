@@ -33,7 +33,8 @@ public class Door : MonoBehaviour {
 
 	public void Start()
     {
-        Bounds roomBounds = _room.GetWorldRoomBounds();
+        //Bounds roomBounds = _room.GetWorldRoomBounds();
+        Bounds roomBounds = _room.GetLocalRoomBounds();
         float ratio = roomBounds.size.x / roomBounds.size.y;
         Vector2 dir = transform.position - (_room.transform.position + roomBounds.center);
         if (Mathf.Abs(dir.x) > Mathf.Abs(dir.y) * ratio)

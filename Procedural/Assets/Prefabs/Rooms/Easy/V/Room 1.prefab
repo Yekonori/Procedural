@@ -194,12 +194,16 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: f1fa8fb1f7189174197cb73aab637a4e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  isStartRoom: 0
+  isEndRoom: 0
+  isSecretRoom: 0
   southDoorAvailable: 0
   northDoorAvailable: 1
   westDoorAvailable: 1
   eastDoorAvailable: 0
   difficulty: 0
   HasKey: 0
+  HasTeleporter: 0
 --- !u!1 &7083969761561188135
 GameObject:
   m_ObjectHideFlags: 0

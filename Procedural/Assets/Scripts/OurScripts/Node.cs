@@ -32,4 +32,6 @@ public class Node
     public int blockNumber = 0;
     public Node associatedNode = null;
     public int tpNumber = 0;
+
+    public bool hasKey = false;
 }
